@@ -46,9 +46,9 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                   Text(
-                    'Hello',
+                    'Hello User',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Color.fromARGB(255, 13, 102, 132),
                       fontWeight: FontWeight.bold,
                       fontSize: getProportionateScreenWidth(40),
                     ),
