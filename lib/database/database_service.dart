@@ -1,36 +1,67 @@
-import 'package:lossy/database/weightEntry.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
+import 'dart:io';
 
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+// import 'package:lossy/database/weightEntry.dart';
+import 'package:sqflite/sqflite.dart';
 
 class DataBaseService {
-  Database? _database;
+  static final dbname = "data.db";
+  static final dbversion = 1;
 
-  Future<Database> get database async {
-    if (_database != null) {
-      return _database!;
+  static final tablename = "activities";
+
+  static final columnid = "columnid";
+  static final type = "type";
+  static final data = "data";
+  static final date = "date";
+
+  // singleton
+  DataBaseService._privateConstructor();
+  static final DataBaseService instance = DataBaseService._privateConstructor();
+
+  // initialize database
+
+  static Database? database;
+
+  Future<Database?> get db async {
+    if (database != null) {
+      return database;
     }
-    _database = await _initialize();
-    return _database!;
-  }
-
-  Future<String> get fullPath async {
-    const name = 'weight_tracker.db';
-    final path = await getDatabasesPath();
-    return join(path, name);
-  }
-
-  Future<Database> _initialize() async {
-    final path = await fullPath;
-    var database = await openDatabase(
-      path,
-      version: 1,
-      onCreate: create,
-      singleInstance: true,
-    );
+    database = await initializeDatabase();
     return database;
   }
 
-  Future<void> create(Database database, int version) async =>
-      await weightEntry().createTable(database);
+  initializeDatabase() async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    String path = join(directory.path, dbname);
+    return await openDatabase(path, version: dbversion, onCreate: createTable);
+  }
+
+  createTable(Database db, int version) {
+    db.execute('''
+      CREATE TABLE $tablename(
+      $columnid INTEGER PRIMARY KEY,
+      $type TEXT NOT NULL,
+      $data REAL NOT NULL,
+      $date TEXT NOT NULL
+      )
+      ''');
+    print("Table created");
+  }
+
+  Future<int> addActivity(Map<String, dynamic> row) async {
+    Database? db = await instance.db;
+    return await db!.insert(tablename, row);
+  }
+
+  Future<List<Map<String, Object?>>> getActivities(String category) async {
+    Database? db = await instance.db;
+    if (category == "All") {
+      return await db!.rawQuery('SELECT * FROM $tablename');
+    } else {
+      return await db!.query('$tablename WHERE $type=?',
+          whereArgs: [category.toLowerCase()]);
+    }
+  }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:grouped_list/grouped_list.dart';
+import 'package:intl/intl.dart';
 import 'package:lossy/database/database_service.dart';
-import 'package:lossy/utils.dart';
+import 'package:lossy/model/acitivity.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,6 +14,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController controller = TextEditingController();
   String dropdownValue = "weight";
+  String selectedTab = "All";
+
   buildTab(String text) {
     return Padding(
       padding: const EdgeInsets.only(right: 25.0),
@@ -20,7 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.redAccent,
         label: Text(
           text,
-          style: textStyle(18, Colors.white, FontWeight.w600),
+          style: TextStyle(
+              fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),
     );
@@ -36,12 +41,15 @@ class _HomeScreenState extends State<HomeScreen> {
             return Container(
               height: 220,
               child: Padding(
-                padding: EdgeInsets.only(top: 20.0),
+                padding: const EdgeInsets.only(top: 20.0),
                 child: Column(
                   children: [
                     Text(
                       "Add",
-                      style: textStyle(28, Colors.black, FontWeight.w700),
+                      style: TextStyle(
+                          fontSize: 28,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700),
                     ),
                     SizedBox(height: 15),
                     Row(
@@ -52,50 +60,55 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 40,
                           child: TextFormField(
                             controller: controller,
-                            style: textStyle(20, Colors.black, FontWeight.w500),
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
                             decoration: InputDecoration(
                               hintText: dropdownValue == "weight"
                                   ? "In kg"
                                   : "convert",
                               border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 1,
-                                  color: Colors.black,
-                                ),
-                              ),
+                                  borderSide: BorderSide(
+                                      width: 1, color: Colors.black)),
                             ),
                           ),
                         ),
                         DropdownButton<String>(
                           hint: Text(
                             "Choose",
-                            style: textStyle(18, Colors.black, FontWeight.w700),
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700),
                           ),
                           dropdownColor: Colors.grey,
                           onChanged: (value) {
-                            stateSetter(
-                              () {
-                                dropdownValue = value!;
-                              },
-                            );
+                            stateSetter(() {
+                              dropdownValue = value!;
+                            });
                           },
                           elevation: 5,
                           value: dropdownValue,
                           items: [
                             DropdownMenuItem(
-                              value: "weight", // Unique value
+                              value: "weight",
                               child: Text(
                                 "Weight",
-                                style: textStyle(
-                                    18, Colors.black, FontWeight.w700),
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700),
                               ),
                             ),
                             DropdownMenuItem(
-                              value: "others", // Unique value
+                              value: "others",
                               child: Text(
                                 "Others",
-                                style: textStyle(
-                                    18, Colors.black, FontWeight.w700),
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700),
                               ),
                             ),
                           ],
@@ -104,20 +117,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     SizedBox(height: 15),
                     IconButton(
-                        iconSize: 50,
-                        color: Colors.redAccent,
-                        icon: Icon(Icons.double_arrow_rounded),
-                        onPressed: () async {
-                          int success =
-                              await DataBaseService.instance.addActivity({
+                      iconSize: 50,
+                      color: Colors.redAccent,
+                      icon: Icon(Icons.double_arrow_rounded),
+                      onPressed: () async {
+                        int success =
+                            await DataBaseService.instance.addActivity(
+                          {
                             DataBaseService.type: dropdownValue,
                             DataBaseService.date: DateTime.now().toString(),
-                            DataBaseService.data: double.parse(controller.text)
-                          });
-                          print(success);
-                          controller.clear();
-                          Navigator.pop(context);
-                        })
+                            DataBaseService.data: double.parse(controller.text),
+                          },
+                        );
+                        print(success);
+                        controller.clear();
+                        Navigator.pop(context);
+                      },
+                    )
                   ],
                 ),
               ),
@@ -130,7 +146,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // SizeConfig().init(context);
     return Scaffold(
       floatingActionButton: Chip(
         backgroundColor: Colors.redAccent,
@@ -142,7 +157,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         label: Text(
           "Add",
-          style: textStyle(22, Colors.white, FontWeight.w600),
+          style: TextStyle(
+              fontSize: 22, color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),
       backgroundColor: Color(0xfffFBF5F5),
@@ -154,11 +170,14 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Text(
                 "WeightTracker",
-                style: textStyle(40, Colors.black, FontWeight.w600),
+                style: TextStyle(
+                    fontSize: 40,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 35),
               Padding(
-                padding: EdgeInsets.only(left: 50, right: 50),
+                padding: const EdgeInsets.only(left: 50, right: 50),
                 child: Row(
                   children: [
                     buildTab("All"),
@@ -166,44 +185,93 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: ListView.builder(
-                    itemCount: 3,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(top: 6),
-                        child: Card(
-                          elevation: 6,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 6),
-                            child: ListTile(
-                              leading: Image(
-                                width: 50,
-                                height: 50,
-                                image: AssetImage('assets/images/logo.webp'),
-                                fit: BoxFit.cover,
-                              ),
-                              title: Text(
-                                "65KG",
-                                style: textStyle(
-                                    27, Colors.black, FontWeight.w600),
-                              ),
-                              trailing: Icon(
-                                Icons.delete,
-                                color: Colors.redAccent,
-                                size: 28,
+              FutureBuilder(
+                future: DataBaseService.instance.getActivities(selectedTab),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(40.0),
+                        // child: CircularProgressIndicator(),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    print("Error: ${snapshot.error}");
+                    return Center(
+                      child: Text("Error: ${snapshot.error}"),
+                    );
+                  } else {
+                    print("Data: ${snapshot.data}");
+
+                    List<Activity> activityList = [];
+                    if (snapshot.data != null) {
+                      activityList = List.generate(
+                        snapshot.data!.length,
+                        (index) => Activity(
+                          snapshot.data![index]['columnid'] as int,
+                          snapshot.data![index]['date'] as String,
+                          snapshot.data![index]['data'] as double,
+                          snapshot.data![index]['type'] as String,
+                        ),
+                      );
+                    }
+
+                    return GroupedListView<Activity, String>(
+                      elements: activityList,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      groupBy: (activity) => DateFormat.MMMd()
+                          .format(DateTime.parse(activity.date)),
+                      itemBuilder: (context, activity) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 6),
+                          child: Card(
+                            elevation: 6,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 6),
+                              child: ListTile(
+                                leading: Image(
+                                  width: 50,
+                                  height: 50,
+                                  image: AssetImage('assets/images/logo.webp'),
+                                  fit: BoxFit.cover,
+                                ),
+                                title: Text(
+                                  activity.type == "weight"
+                                      ? "${activity.data} kg"
+                                      : "${activity.data} convert",
+                                  style: TextStyle(
+                                      fontSize: 27,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                trailing: Icon(
+                                  Icons.delete,
+                                  color: Colors.redAccent,
+                                  size: 28,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                      },
+                      groupSeparatorBuilder: (value) {
+                        return Padding(
+                          padding: EdgeInsets.only(top: 6),
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                                fontSize: 23,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
               )
             ],
           ),
