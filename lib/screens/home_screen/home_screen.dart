@@ -90,6 +90,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 15),
+                  IconButton(
+                    iconSize: 50,
+                    color: Colors.redAccent,
+                    icon: Icon(Icons.double_arrow_rounded),
+                    onPressed: () => print("Pressed"),
+                  )
                 ],
               ),
             ),
