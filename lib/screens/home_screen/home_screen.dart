@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lossy/database/database_service.dart';
 import 'package:lossy/utils.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -9,6 +10,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  TextEditingController controller = TextEditingController();
+  String dropdownValue = "weight";
   buildTab(String text) {
     return Padding(
       padding: const EdgeInsets.only(right: 25.0),
@@ -28,79 +31,98 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (context) {
         return Dialog(
-          child: Container(
-            height: 220,
-            child: Padding(
-              padding: EdgeInsets.only(top: 20.0),
-              child: Column(
-                children: [
-                  Text(
-                    "Add",
-                    style: textStyle(28, Colors.black, FontWeight.w700),
-                  ),
-                  SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        width: 125,
-                        height: 40,
-                        child: TextFormField(
-                          style: textStyle(20, Colors.black, FontWeight.w500),
-                          decoration: InputDecoration(
-                            hintText: "In kg",
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: Colors.black,
+          child:
+              StatefulBuilder(builder: (BuildContext, StateSetter stateSetter) {
+            return Container(
+              height: 220,
+              child: Padding(
+                padding: EdgeInsets.only(top: 20.0),
+                child: Column(
+                  children: [
+                    Text(
+                      "Add",
+                      style: textStyle(28, Colors.black, FontWeight.w700),
+                    ),
+                    SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          width: 125,
+                          height: 40,
+                          child: TextFormField(
+                            controller: controller,
+                            style: textStyle(20, Colors.black, FontWeight.w500),
+                            decoration: InputDecoration(
+                              hintText: dropdownValue == "weight"
+                                  ? "In kg"
+                                  : "convert",
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      DropdownButton<String>(
-                        hint: Text(
-                          "Choose",
-                          style: textStyle(18, Colors.black, FontWeight.w700),
+                        DropdownButton<String>(
+                          hint: Text(
+                            "Choose",
+                            style: textStyle(18, Colors.black, FontWeight.w700),
+                          ),
+                          dropdownColor: Colors.grey,
+                          onChanged: (value) {
+                            stateSetter(
+                              () {
+                                dropdownValue = value!;
+                              },
+                            );
+                          },
+                          elevation: 5,
+                          value: dropdownValue,
+                          items: [
+                            DropdownMenuItem(
+                              value: "weight", // Unique value
+                              child: Text(
+                                "Weight",
+                                style: textStyle(
+                                    18, Colors.black, FontWeight.w700),
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "others", // Unique value
+                              child: Text(
+                                "Others",
+                                style: textStyle(
+                                    18, Colors.black, FontWeight.w700),
+                              ),
+                            ),
+                          ],
                         ),
-                        dropdownColor: Colors.grey,
-                        onChanged: (value) {
-                          print(value);
-                        },
-                        elevation: 5,
-                        value: "weight",
-                        items: [
-                          DropdownMenuItem(
-                            value: "weight", // Unique value
-                            child: Text(
-                              "Weight",
-                              style:
-                                  textStyle(18, Colors.black, FontWeight.w700),
-                            ),
-                          ),
-                          DropdownMenuItem(
-                            value: "others", // Unique value
-                            child: Text(
-                              "Others",
-                              style:
-                                  textStyle(18, Colors.black, FontWeight.w700),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 15),
-                  IconButton(
-                    iconSize: 50,
-                    color: Colors.redAccent,
-                    icon: Icon(Icons.double_arrow_rounded),
-                    onPressed: () => print("Pressed"),
-                  )
-                ],
+                      ],
+                    ),
+                    SizedBox(height: 15),
+                    IconButton(
+                        iconSize: 50,
+                        color: Colors.redAccent,
+                        icon: Icon(Icons.double_arrow_rounded),
+                        onPressed: () async {
+                          int success =
+                              await DataBaseService.instance.addActivity({
+                            DataBaseService.type: dropdownValue,
+                            DataBaseService.date: DateTime.now().toString(),
+                            DataBaseService.data: double.parse(controller.text)
+                          });
+                          print(success);
+                          controller.clear();
+                          Navigator.pop(context);
+                        })
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          }),
         );
       },
     );
