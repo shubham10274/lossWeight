@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lossy/screens/home_screen/home_screen.dart';
+import 'package:lossy/screens/start_screen/start_screen.dart';
 import 'package:sizer/sizer.dart';
 
 void main() {
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home: HomeScreen());
+          home: StartScreen());
     });
   }
 }

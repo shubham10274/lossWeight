@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:lossy/database/database_service.dart';
 import 'package:lossy/model/acitivity.dart';
 import 'package:lossy/screens/home_screen/components/line_chart.dart';
+import 'package:sqflite/sqflite.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,6 +12,8 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
+late DataBaseService databaseService;
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController controller = TextEditingController();
@@ -130,6 +133,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.redAccent,
                         icon: const Icon(Icons.double_arrow_rounded),
                         onPressed: () async {
+                          DataBaseService databaseService =
+                              DataBaseService.instance;
+                          Database db =
+                              await databaseService.initializeDatabase();
+
+                          databaseService.onCreateDatabase(db, 1);
                           int success =
                               await DataBaseService.instance.addActivity({
                             DataBaseService.type: dropdownValue,
@@ -155,6 +164,12 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    databaseService = DataBaseService.instance;
   }
 
   @override
