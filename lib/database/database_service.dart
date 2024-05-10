@@ -32,36 +32,61 @@ class DataBaseService {
     return database;
   }
 
-  initializeDatabase() async {
+  Future<Database> initializeDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = join(directory.path, dbname);
-    return await openDatabase(path, version: dbversion, onCreate: createTable);
+
+    print('Database path: $path'); // Print database path for debugging
+
+    try {
+      Database database = await openDatabase(path,
+          version: dbversion, onCreate: onCreateDatabase);
+      print("Database initialized successfully");
+      return database;
+    } catch (e) {
+      print("Error initializing database: $e");
+      rethrow; // Rethrow the exception for better error handling
+    }
   }
 
-  createTable(Database db, int version) {
+  void onCreateDatabase(Database db, int version) {
     db.execute('''
-      CREATE TABLE $tablename(
-      $columnid INTEGER PRIMARY KEY,
-      $type TEXT NOT NULL,
-      $data REAL NOT NULL,
-      $date TEXT NOT NULL
-      )
-      ''');
-    print("Table created");
+    CREATE TABLE $tablename(
+    $columnid INTEGER PRIMARY KEY,
+    $type TEXT NOT NULL,
+    $data REAL NOT NULL,
+    $date TEXT NOT NULL
+    )
+  ''');
+    print("Table created successfully");
   }
 
   Future<int> addActivity(Map<String, dynamic> row) async {
-    Database? db = await instance.db;
-    return await db!.insert(tablename, row);
+    try {
+      final Database? db = await instance.db;
+      final int id = await db!.insert(tablename, row);
+      print('Activity added with ID: $id');
+      return id;
+    } catch (e) {
+      print('Error adding activity: $e');
+      return -1; // Return a failure indicator
+    }
   }
 
   Future<List<Map<String, Object?>>> getActivities(String category) async {
     Database? db = await instance.db;
-    if (category == "All") {
-      return await db!.rawQuery('SELECT * FROM $tablename');
+    if (category == "Weight") {
+      print("Fetching all activities...");
+      return await db!.rawQuery('SELECT * FROM activities');
     } else {
-      return await db!.query('$tablename WHERE $type=?',
-          whereArgs: [category.toLowerCase()]);
+      print("Fetching activities for category: $category");
+      return await db!.query('activities',
+          where: 'type = ?', whereArgs: [category.toLowerCase()]);
     }
+  }
+
+  Future<int> deleteActivity(int id) async {
+    Database? db = await instance.db;
+    return await db!.delete(tablename, where: ' $columnid=?', whereArgs: [id]);
   }
 }

@@ -3,6 +3,7 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:lossy/database/database_service.dart';
 import 'package:lossy/model/acitivity.dart';
+import 'package:lossy/screens/home_screen/components/line_chart.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,18 +15,26 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController controller = TextEditingController();
   String dropdownValue = "weight";
-  String selectedTab = "All";
+  String selectedTab = "Weight";
 
   buildTab(String text) {
+    bool selected = text == selectedTab;
     return Padding(
       padding: const EdgeInsets.only(right: 25.0),
-      child: Chip(
-        elevation: 10,
-        backgroundColor: Colors.redAccent,
-        label: Text(
-          text,
-          style: TextStyle(
-              fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            selectedTab = text;
+          });
+        },
+        child: Chip(
+          elevation: 10,
+          backgroundColor: Colors.redAccent,
+          label: Text(
+            text,
+            style: TextStyle(
+                fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
+          ),
         ),
       ),
     );
@@ -117,23 +126,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     SizedBox(height: 15),
                     IconButton(
-                      iconSize: 50,
-                      color: Colors.redAccent,
-                      icon: Icon(Icons.double_arrow_rounded),
-                      onPressed: () async {
-                        int success =
-                            await DataBaseService.instance.addActivity(
-                          {
+                        iconSize: 50,
+                        color: Colors.redAccent,
+                        icon: const Icon(Icons.double_arrow_rounded),
+                        onPressed: () async {
+                          int success =
+                              await DataBaseService.instance.addActivity({
                             DataBaseService.type: dropdownValue,
                             DataBaseService.date: DateTime.now().toString(),
-                            DataBaseService.data: double.parse(controller.text),
-                          },
-                        );
-                        print(success);
-                        controller.clear();
-                        Navigator.pop(context);
-                      },
-                    )
+                            DataBaseService.data: double.parse(controller.text)
+                          });
+                          if (success != -1) {
+                            print('Activity added successfully');
+                          } else {
+                            print('Failed to add activity');
+                          }
+                          controller.clear();
+                          Navigator.pop(context);
+                          setState(() {
+                            {}
+                          });
+                        })
                   ],
                 ),
               ),
@@ -177,14 +190,16 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(height: 35),
               Padding(
-                padding: const EdgeInsets.only(left: 50, right: 50),
+                padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Row(
                   children: [
-                    buildTab("All"),
+                    // buildTab("All"),
                     buildTab("Weight"),
+                    buildTab("LineChart")
                   ],
                 ),
               ),
+              if (selectedTab == "LineChart") LineChartSample2(),
               FutureBuilder(
                 future: DataBaseService.instance.getActivities(selectedTab),
                 builder: (context, snapshot) {
@@ -247,10 +262,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                       color: Colors.black,
                                       fontWeight: FontWeight.w600),
                                 ),
-                                trailing: Icon(
-                                  Icons.delete,
-                                  color: Colors.redAccent,
-                                  size: 28,
+                                trailing: InkWell(
+                                  onTap: () {
+                                    DataBaseService.instance
+                                        .deleteActivity(activity.id);
+                                    setState(() {
+                                      {}
+                                    });
+                                  },
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.redAccent,
+                                    size: 28,
+                                  ),
                                 ),
                               ),
                             ),
@@ -272,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }
                 },
-              )
+              ),
             ],
           ),
         ),
