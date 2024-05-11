@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lossy/SQLite/sqlite.dart';
-import 'package:lossy/model/users.dart';
 import 'package:lossy/screens/auth_screen/auth_screen.dart';
 import 'package:lossy/screens/home_screen/home_screen.dart';
 import 'package:lossy/size_config/size_config.dart';
@@ -13,38 +12,15 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  //We need two text editing controller
-
-  //TextEditing controller to control the text when we enter into it
   final username = TextEditingController();
   final password = TextEditingController();
 
-  //A bool variable for show and hide password
   bool isVisible = false;
 
-  //Here is our bool variable
   bool isLoginTrue = false;
 
   final db = DatabaseHelper();
 
-  //Now we should call this function in login button
-  login() async {
-    var response = await db
-        .login(Users(usrName: username.text, usrPassword: password.text));
-    if (response == true) {
-      //If login is correct, then goto notes
-      if (!mounted) return;
-      // Navigator.pushReplacement(
-      //     context, MaterialPageRoute(builder: (context) => const Notes()));
-    } else {
-      //If not, true the bool value to show error message
-      setState(() {
-        isLoginTrue = true;
-      });
-    }
-  }
-
-  //We have to create global key for our form
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -54,14 +30,10 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(10.0),
-            //We put all our textfield to a form to be controlled and not allow as empty
             child: Form(
               key: formKey,
               child: Column(
                 children: [
-                  //Username field
-
-                  //Before we show the image, after we copied the image we need to define the location in pubspec.yaml
                   Image.asset(
                     'assets/images/weight-loss-logo-template-design_316488-761.jpg.avif',
                     height: getProportionateScreenHeight(200),
@@ -136,10 +108,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Colors.deepPurple),
                     child: TextButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomeScreen()));
+                          if (formKey.currentState!.validate()) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeScreen()));
+                          }
                         },
                         child: const Text(
                           "LOGIN",
@@ -163,14 +137,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: const Text("SIGN UP"))
                     ],
                   ),
-
-                  // We will disable this message in default, when user and pass is incorrect we will trigger this message to user
-                  isLoginTrue
-                      ? const Text(
-                          "Username or passowrd is incorrect",
-                          style: TextStyle(color: Colors.red),
-                        )
-                      : const SizedBox(),
                 ],
               ),
             ),

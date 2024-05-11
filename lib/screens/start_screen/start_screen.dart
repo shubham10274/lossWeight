@@ -128,7 +128,6 @@ class StartScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             fontSize: getProportionateScreenWidth(25)),
                         "Let's Begin!!",
-                        // style: Theme.of(context).textTheme.bodyText1,
                       ),
                     ),
                     SizedBox(
@@ -155,34 +154,6 @@ class StartScreen extends StatelessWidget {
                     SizedBox(
                       height: getProportionateScreenHeight(20),
                     ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    // Padding(
-                    //   padding: const EdgeInsets.all(20.0),
-                    //   child: Text(
-                    //     style: TextStyle(
-                    //         color: Colors.blue,
-                    //         fontWeight: FontWeight.bold,
-                    //         fontSize: getProportionateScreenWidth(25)),
-                    //     "Let's Begin",
-                    //     // style: Theme.of(context).textTheme.bodyText1,
-                    //   ),
-                    // ),
-                    //     TextButton(
-                    //       onPressed: () {
-                    //         Navigator.of(context)
-                    //             .pushReplacementNamed('/login');
-                    //       },
-                    //       child: const Text(
-                    //         'Login',
-                    //         style: TextStyle(
-                    //           color: Color.fromARGB(255, 30, 158, 83),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                   ],
                 ),
               ],

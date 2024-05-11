@@ -13,14 +13,13 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Sizer(builder: (context, orientation, screenType) {
       return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Weight Track',
-          initialRoute: '/splash', // Set the initial route to splash screen
+          initialRoute: '/splash',
           routes: {
             '/splash': (context) => SplashScreen(), // Splash screen route
             '/startup': (context) => StartScreen(), // Start up screen route

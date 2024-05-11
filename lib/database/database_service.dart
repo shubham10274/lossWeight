@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-// import 'package:lossy/database/weightEntry.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DataBaseService {
@@ -62,15 +61,8 @@ class DataBaseService {
   }
 
   Future<int> addActivity(Map<String, dynamic> row) async {
-    try {
-      final Database? db = await instance.db;
-      final int id = await db!.insert(tablename, row);
-      print('Activity added with ID: $id');
-      return id;
-    } catch (e) {
-      print('Error adding activity: $e');
-      return -1; // Return a failure indicator
-    }
+    final Database? db = await instance.db;
+    return await db!.insert(tablename, row);
   }
 
   Future<List<Map<String, Object?>>> getActivities(String category) async {

@@ -14,8 +14,6 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-late DataBaseService databaseService;
-
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController controller = TextEditingController();
   String dropdownValue = "weight";
@@ -164,12 +162,6 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    databaseService = DataBaseService.instance;
   }
 
   @override

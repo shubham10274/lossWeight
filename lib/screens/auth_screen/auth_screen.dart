@@ -25,7 +25,7 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      //SingleChildScrollView to have an scrol in the screen
+      //SingleChildScrollView to have an scroll in the screen
       body: Center(
         child: SingleChildScrollView(
           child: Form(
@@ -35,7 +35,6 @@ class _SignUpState extends State<SignUp> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  //We will copy the previous textfield we designed to avoid time consuming
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -55,8 +54,6 @@ class _SignUpState extends State<SignUp> {
                       fontSize: getProportionateScreenWidth(40),
                     ),
                   ),
-
-                  //As we assigned our controller to the textformfields
 
                   Container(
                     margin: EdgeInsets.all(8),
@@ -165,15 +162,13 @@ class _SignUpState extends State<SignUp> {
                     child: TextButton(
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
-                            //Login method will be here
-
                             final db = DatabaseHelper();
                             db
                                 .signup(Users(
                                     usrName: username.text,
                                     usrPassword: password.text))
                                 .whenComplete(() {
-                              // After success user creation go to login screen
+                              // After success user creation go to home screen
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -188,14 +183,13 @@ class _SignUpState extends State<SignUp> {
                         )),
                   ),
 
-                  //Sign up button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text("Already have an account?"),
                       TextButton(
                           onPressed: () {
-                            // Navigate to sign up
+                            // Navigate to login up
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
