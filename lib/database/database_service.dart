@@ -50,7 +50,7 @@ class DataBaseService {
 
   void onCreateDatabase(Database db, int version) {
     db.execute('''
-    CREATE TABLE IF NOT EXISTS $tablename(
+    CREATE TABLE (
       $columnid INTEGER PRIMARY KEY,
       $type TEXT NOT NULL,
       $data REAL NOT NULL,
