@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lossy/SQLite/sqlite.dart';
+import 'package:lossy/model/users.dart';
 import 'package:lossy/screens/auth_screen/auth_screen.dart';
 import 'package:lossy/screens/home_screen/home_screen.dart';
 import 'package:lossy/size_config/size_config.dart';
@@ -14,9 +16,30 @@ class _LoginScreenState extends State<LoginScreen> {
   final username = TextEditingController();
   final password = TextEditingController();
 
+  // If someone will open the login screen then they have to put
+  //username - shubham or hello, password- hello
+  // because right now db is updated with only 2 value i.e (shubham,hello) or (helo,hello)
+  // otherwise all the data will be showing error because right now db is not
+  //fetching data from database for login, only it is updating the value to db.
+
   bool isVisible = false;
 
+  final db = DatabaseHelper();
   bool isLoginTrue = false;
+
+  login() async {
+    var response = await db
+        .login(Users(usrName: username.text, usrPassword: password.text));
+    if (response == true) {
+      if (!mounted) return;
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    } else {
+      setState(() {
+        isLoginTrue = true;
+      });
+    }
+  }
 
   final formKey = GlobalKey<FormState>();
   @override
@@ -106,10 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: TextButton(
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomeScreen()));
+                            login();
                           }
                         },
                         child: const Text(
@@ -134,6 +154,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: const Text("SIGN UP"))
                     ],
                   ),
+
+                  isLoginTrue
+                      ? const Text(
+                          "Username or passowrd is incorrect",
+                          style: TextStyle(color: Colors.red),
+                        )
+                      : const SizedBox(),
                 ],
               ),
             ),
