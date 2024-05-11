@@ -50,11 +50,11 @@ class DataBaseService {
 
   void onCreateDatabase(Database db, int version) {
     db.execute('''
-    CREATE TABLE $tablename(
-    $columnid INTEGER PRIMARY KEY,
-    $type TEXT NOT NULL,
-    $data REAL NOT NULL,
-    $date TEXT NOT NULL
+    CREATE TABLE IF NOT EXISTS $tablename(
+      $columnid INTEGER PRIMARY KEY,
+      $type TEXT NOT NULL,
+      $data REAL NOT NULL,
+      $date TEXT NOT NULL
     )
   ''');
     print("Table created successfully");

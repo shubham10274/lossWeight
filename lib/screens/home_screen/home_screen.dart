@@ -8,7 +8,7 @@ import 'package:lossy/size_config/size_config.dart';
 import 'package:sqflite/sqflite.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -18,6 +18,28 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController controller = TextEditingController();
   String dropdownValue = "weight";
   String selectedTab = "Weight";
+  double goalWeight = 60.0;
+  double currentWeight = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCurrentWeight();
+  }
+
+  Future<void> fetchCurrentWeight() async {
+    List<Map<String, Object?>> recentWeightData =
+        await DataBaseService.instance.getActivities("weight");
+    if (recentWeightData.isNotEmpty) {
+      Map<String, Object?> mostRecentWeight = recentWeightData.last;
+      var weight = mostRecentWeight[DataBaseService.data];
+      if (weight != null && weight is double) {
+        setState(() {
+          currentWeight = weight;
+        });
+      }
+    }
+  }
 
   buildTab(String text) {
     return Padding(
@@ -120,10 +142,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 15),
                     IconButton(
-                        iconSize: 50,
-                        color: Colors.redAccent,
-                        icon: const Icon(Icons.double_arrow_rounded),
-                        onPressed: () async {
+                      iconSize: 50,
+                      color: Colors.redAccent,
+                      icon: const Icon(Icons.double_arrow_rounded),
+                      onPressed: () async {
+                        double? parsedWeight;
+                        try {
+                          parsedWeight = double.parse(controller.text);
+                        } catch (e) {
+                          print('Error parsing weight: $e');
+                        }
+
+                        if (parsedWeight != null) {
                           DataBaseService databaseService =
                               DataBaseService.instance;
                           Database db =
@@ -134,19 +164,19 @@ class _HomeScreenState extends State<HomeScreen> {
                               await DataBaseService.instance.addActivity({
                             DataBaseService.type: dropdownValue,
                             DataBaseService.date: DateTime.now().toString(),
-                            DataBaseService.data: double.parse(controller.text)
+                            DataBaseService.data: parsedWeight,
                           });
                           if (success != -1) {
                             print('Activity added successfully');
+                            fetchCurrentWeight();
                           } else {
                             print('Failed to add activity');
                           }
-                          controller.clear();
-                          Navigator.pop(context);
-                          setState(() {
-                            {}
-                          });
-                        })
+                        }
+                        controller.clear();
+                        Navigator.pop(context);
+                      },
+                    )
                   ],
                 ),
               ),
@@ -206,18 +236,35 @@ class _HomeScreenState extends State<HomeScreen> {
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Row(
-                  children: [
-                    // buildTab("All"),
-                    buildTab("Weight"),
-                    buildTab("LineChart")
-                  ],
+                  children: [buildTab("Weight"), buildTab("LineChart")],
                 ),
               ),
               if (selectedTab == "LineChart")
                 const Padding(
                     padding: EdgeInsets.only(top: 80),
                     child: LineChartSample2()),
-              FutureBuilder(
+              Column(
+                children: [
+                  Text(
+                    "Current Weight: $currentWeight kg\nGoal Weight: $goalWeight kg",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "Difference from Goal: ${(currentWeight - goalWeight).abs()} kg",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: currentWeight > goalWeight
+                          ? Colors.red
+                          : Colors.green,
+                    ),
+                  ),
+                ],
+              ),
+              FutureBuilder<List<Map<String, Object?>>>(
                 future: DataBaseService.instance.getActivities(selectedTab),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
@@ -233,8 +280,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text("Error: ${snapshot.error}"),
                     );
                   } else {
-                    print("Data: ${snapshot.data}");
-
                     List<Activity> activityList = [];
                     if (snapshot.data != null) {
                       activityList = List.generate(
@@ -247,7 +292,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       );
                     }
-
                     return GroupedListView<Activity, String>(
                       elements: activityList,
                       shrinkWrap: true,
@@ -284,9 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   onTap: () {
                                     DataBaseService.instance
                                         .deleteActivity(activity.id);
-                                    setState(() {
-                                      {}
-                                    });
+                                    setState(() {});
                                   },
                                   child: const Icon(
                                     Icons.delete,
