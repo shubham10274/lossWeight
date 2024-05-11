@@ -91,13 +91,13 @@ class _LineChartSample2State extends State<LineChartSample2> {
     String text;
     switch (value.toInt()) {
       case 1:
-        text = '78';
+        text = '60';
         break;
       case 3:
-        text = '74';
+        text = '70';
         break;
       case 5:
-        text = '65';
+        text = '75';
         break;
       default:
         return Container();

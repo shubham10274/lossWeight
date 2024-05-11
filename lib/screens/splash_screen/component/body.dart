@@ -12,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 1), () {
+    Timer(Duration(seconds: 2), () {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => StartScreen()));
     });
@@ -30,7 +30,8 @@ class _SplashScreenState extends State<SplashScreen> {
           Container(
               width: 500,
               height: 500,
-              child: Image.asset('assets/images/logo.webp')),
+              child: Image.asset(
+                  'assets/images/weight-loss-logo-template-design_316488-761.jpg.avif')),
           const SizedBox(
             height: 30,
           ),

@@ -42,7 +42,7 @@ class StartScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20.0),
                             ),
                             child: Image.asset(
-                              'assets/images/logo.webp',
+                              'assets/images/weight-loss-logo-template-design_316488-761.jpg.avif',
                               height: getProportionateScreenHeight(85),
                               width: getProportionateScreenWidth(83),
                             ),
@@ -51,7 +51,7 @@ class StartScreen extends StatelessWidget {
                             width: getProportionateScreenWidth(12),
                           ),
                           const Text(
-                            'WeightTracker',
+                            'WeightLoss',
                             style: TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
@@ -118,12 +118,25 @@ class StartScreen extends StatelessWidget {
                       height: getProportionateScreenHeight(30),
                     ),
                     SizedBox(
-                      height: getProportionateScreenHeight(60),
+                      height: getProportionateScreenHeight(30),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        style: TextStyle(
+                            color: ThemeData().primaryColorDark,
+                            fontWeight: FontWeight.bold,
+                            fontSize: getProportionateScreenWidth(25)),
+                        "Let's Begin!!",
+                        // style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                    ),
+                    SizedBox(
+                      height: getProportionateScreenHeight(20),
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        // Navigator.of(context)
-                        //     .pushReplacementNamed(AuthScreen.routeName);
+                        Navigator.of(context).pushReplacementNamed('/signup');
                       },
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(
@@ -142,24 +155,34 @@ class StartScreen extends StatelessWidget {
                     SizedBox(
                       height: getProportionateScreenHeight(20),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Do you have an account? ',
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Login',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 30, 158, 83),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    // Padding(
+                    //   padding: const EdgeInsets.all(20.0),
+                    //   child: Text(
+                    //     style: TextStyle(
+                    //         color: Colors.blue,
+                    //         fontWeight: FontWeight.bold,
+                    //         fontSize: getProportionateScreenWidth(25)),
+                    //     "Let's Begin",
+                    //     // style: Theme.of(context).textTheme.bodyText1,
+                    //   ),
+                    // ),
+                    //     TextButton(
+                    //       onPressed: () {
+                    //         Navigator.of(context)
+                    //             .pushReplacementNamed('/login');
+                    //       },
+                    //       child: const Text(
+                    //         'Login',
+                    //         style: TextStyle(
+                    //           color: Color.fromARGB(255, 30, 158, 83),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               ],

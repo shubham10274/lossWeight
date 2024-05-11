@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lossy/JSONModels/users.dart';
 import 'package:lossy/SQLite/sqlite.dart';
+import 'package:lossy/screens/home_screen/home_screen.dart';
+import 'package:lossy/screens/login_screen/login_screen.dart';
 import 'package:lossy/size_config/size_config.dart';
 
 class SignUp extends StatefulWidget {
@@ -40,7 +42,7 @@ class _SignUpState extends State<SignUp> {
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     child: Image.asset(
-                      'assets/images/logo.webp',
+                      'assets/images/weight-loss-logo-template-design_316488-761.jpg.avif',
                       height: getProportionateScreenHeight(200),
                       width: getProportionateScreenWidth(200),
                     ),
@@ -171,12 +173,12 @@ class _SignUpState extends State<SignUp> {
                                     usrName: username.text,
                                     usrPassword: password.text))
                                 .whenComplete(() {
-                              //After success user creation go to login screen
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) =>
-                              //             const LoginScreen()));
+                              // After success user creation go to login screen
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const HomeScreen()));
                             });
                           }
                         },
@@ -193,11 +195,11 @@ class _SignUpState extends State<SignUp> {
                       const Text("Already have an account?"),
                       TextButton(
                           onPressed: () {
-                            //Navigate to sign up
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => const LoginScreen()));
+                            // Navigate to sign up
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginScreen()));
                           },
                           child: const Text("Login"))
                     ],

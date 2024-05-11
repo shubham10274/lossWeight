@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:lossy/database/database_service.dart';
 import 'package:lossy/model/acitivity.dart';
 import 'package:lossy/screens/home_screen/components/line_chart.dart';
+import 'package:lossy/size_config/size_config.dart';
 import 'package:sqflite/sqflite.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -196,8 +197,22 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.only(top: 50.0),
           child: Column(
             children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Image.asset(
+                  'assets/images/weight-loss-logo-template-design_316488-761.jpg.avif',
+                  height: getProportionateScreenHeight(85),
+                  width: getProportionateScreenWidth(83),
+                ),
+              ),
+              SizedBox(
+                width: getProportionateScreenWidth(12),
+              ),
               Text(
-                "WeightTracker",
+                "WeightLoss",
                 style: TextStyle(
                     fontSize: 40,
                     color: Colors.black,
@@ -214,7 +229,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              if (selectedTab == "LineChart") LineChartSample2(),
+              if (selectedTab == "LineChart")
+                Padding(
+                    padding: EdgeInsets.only(top: 80),
+                    child: LineChartSample2()),
               FutureBuilder(
                 future: DataBaseService.instance.getActivities(selectedTab),
                 builder: (context, snapshot) {
@@ -222,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Center(
                       child: Padding(
                         padding: EdgeInsets.all(40.0),
-                        // child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(),
                       ),
                     );
                   } else if (snapshot.hasError) {
@@ -265,7 +283,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 leading: Image(
                                   width: 50,
                                   height: 50,
-                                  image: AssetImage('assets/images/logo.webp'),
+                                  image:
+                                      AssetImage('assets/images/32510396.jpg'),
                                   fit: BoxFit.cover,
                                 ),
                                 title: Text(
