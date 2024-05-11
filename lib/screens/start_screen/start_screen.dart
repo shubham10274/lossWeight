@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lossy/size_config/size_config.dart';
 
 class StartScreen extends StatelessWidget {
-  static String routeName = '/start-screen';
   StartScreen({Key? key}) : super(key: key);
-
-  final controller = PageController(
-    viewportFraction: 0.9,
-  );
 
   @override
   Widget build(BuildContext context) {

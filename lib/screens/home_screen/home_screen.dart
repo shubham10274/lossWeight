@@ -85,13 +85,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         DropdownButton<String>(
-                          hint: const Text(
-                            "Choose",
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700),
-                          ),
                           dropdownColor: Colors.grey,
                           onChanged: (value) {
                             stateSetter(() {
