@@ -22,7 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
   String selectedTab = "Weight";
 
   buildTab(String text) {
-    bool selected = text == selectedTab;
     return Padding(
       padding: const EdgeInsets.only(right: 25.0),
       child: InkWell(
@@ -36,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.redAccent,
           label: Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
           ),
         ),
@@ -51,20 +50,20 @@ class _HomeScreenState extends State<HomeScreen> {
         return Dialog(
           child:
               StatefulBuilder(builder: (BuildContext, StateSetter stateSetter) {
-            return Container(
+            return SizedBox(
               height: 220,
               child: Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: Column(
                   children: [
-                    Text(
+                    const Text(
                       "Add",
                       style: TextStyle(
                           fontSize: 28,
                           color: Colors.black,
                           fontWeight: FontWeight.w700),
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -73,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 40,
                           child: TextFormField(
                             controller: controller,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 20,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500),
@@ -81,14 +80,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               hintText: dropdownValue == "weight"
                                   ? "In kg"
                                   : "convert",
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 1, color: Colors.black)),
                             ),
                           ),
                         ),
                         DropdownButton<String>(
-                          hint: Text(
+                          hint: const Text(
                             "Choose",
                             style: TextStyle(
                                 fontSize: 18,
@@ -103,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           elevation: 5,
                           value: dropdownValue,
-                          items: [
+                          items: const [
                             DropdownMenuItem(
                               value: "weight",
                               child: Text(
@@ -128,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     IconButton(
                         iconSize: 50,
                         color: Colors.redAccent,
@@ -179,20 +178,20 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: Chip(
         backgroundColor: Colors.redAccent,
         onDeleted: () => openAddDialog(context),
-        deleteIcon: Icon(
+        deleteIcon: const Icon(
           Icons.add,
           color: Colors.white,
           size: 26,
         ),
-        label: Text(
+        label: const Text(
           "Add",
           style: TextStyle(
               fontSize: 22, color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),
-      backgroundColor: Color(0xfffFBF5F5),
+      backgroundColor: const Color(0xfffFBF5F5),
       body: SingleChildScrollView(
-        physics: ScrollPhysics(),
+        physics: const ScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.only(top: 50.0),
           child: Column(
@@ -211,14 +210,14 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 width: getProportionateScreenWidth(12),
               ),
-              Text(
+              const Text(
                 "WeightLoss",
                 style: TextStyle(
                     fontSize: 40,
                     color: Colors.black,
                     fontWeight: FontWeight.w600),
               ),
-              SizedBox(height: 35),
+              const SizedBox(height: 35),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Row(
@@ -230,14 +229,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               if (selectedTab == "LineChart")
-                Padding(
+                const Padding(
                     padding: EdgeInsets.only(top: 80),
                     child: LineChartSample2()),
               FutureBuilder(
                 future: DataBaseService.instance.getActivities(selectedTab),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return Center(
+                    return const Center(
                       child: Padding(
                         padding: EdgeInsets.all(40.0),
                         child: CircularProgressIndicator(),
@@ -267,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     return GroupedListView<Activity, String>(
                       elements: activityList,
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       groupBy: (activity) => DateFormat.MMMd()
                           .format(DateTime.parse(activity.date)),
                       itemBuilder: (context, activity) {
@@ -280,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Padding(
                               padding: const EdgeInsets.only(top: 6),
                               child: ListTile(
-                                leading: Image(
+                                leading: const Image(
                                   width: 50,
                                   height: 50,
                                   image:
@@ -291,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   activity.type == "weight"
                                       ? "${activity.data} kg"
                                       : "${activity.data} convert",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 27,
                                       color: Colors.black,
                                       fontWeight: FontWeight.w600),
@@ -304,7 +303,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       {}
                                     });
                                   },
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.delete,
                                     color: Colors.redAccent,
                                     size: 28,
@@ -317,10 +316,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       groupSeparatorBuilder: (value) {
                         return Padding(
-                          padding: EdgeInsets.only(top: 6),
+                          padding: const EdgeInsets.only(top: 6),
                           child: Text(
                             value,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 23,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600),

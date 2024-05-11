@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lossy/JSONModels/users.dart';
 import 'package:lossy/SQLite/sqlite.dart';
+import 'package:lossy/model/users.dart';
 import 'package:lossy/screens/home_screen/home_screen.dart';
 import 'package:lossy/screens/login_screen/login_screen.dart';
 import 'package:lossy/size_config/size_config.dart';
